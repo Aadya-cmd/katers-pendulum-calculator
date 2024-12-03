@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kater's Pendulum Calculator - Aadya Sri Jha</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 1.5em 0;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header p {
+            margin: 0.5em 0 0;
+            font-size: 1.2em;
+        }
+
+        main {
+            margin: 2em auto;
+            padding: 2em;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .section {
+            margin-bottom: 2em;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+
+        .section p, ul {
+            line-height: 1.6;
+        }
+
+        .input-group {
+            margin-bottom: 1.5em;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.8em 1.5em;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        #results {
+            margin-top: 2em;
+            padding: 1em;
+            background: #f0f0f0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #results p {
+            font-size: 1.2em;
+            margin: 0.5em 0;
+        }
+
+        footer {
+            margin-top: 2em;
+            padding: 1em 0;
+            text-align: center;
+            background: #4CAF50;
+            color: white;
+            width: 100%;
+            font-size: 0.9em;
+        }
+
+        footer p {
+            margin: 0.2em 0;
+        }
+
+        footer strong {
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Kater's Pendulum Calculator</h1>
+        <p>Created by Aadya Sri Jha | IGDTUW | B.Tech First Year</p>
+    </header>
+    <main>
+        <section class="section">
+            <h2>Aim</h2>
+            <p>To determine the value of acceleration due to gravity \( g \) using Kater's Pendulum.</p>
+        </section>
+        <section class="section">
+            <h2>Theory</h2>
+            <p>Kater's Pendulum is a reversible pendulum used to determine the acceleration due to gravity. The time periods \( T_1 \) and \( T_2 \) are measured about two knife-edges, and using the effective length, \( g \) is calculated.</p>
+        </section>
+        <form id="pendulum-form">
+            <h2>Input Values</h2>
+            <div class="input-group">
+                <label for="l1">Distance \( l_1 \) (cm):</label>
+                <input type="number" id="l1">
+            </div>
+            <div class="input-group">
+                <label for="l2">Distance \( l_2 \) (cm):</label>
+                <input type="number" id="l2">
+            </div>
+            <div class="input-group">
+                <label for="t1">Time for \( T_1 \) (sec):</label>
+                <input type="number" id="t1">
+            </div>
+            <div class="input-group">
+                <label for="t2">Time for \( T_2 \) (sec):</label>
+                <input type="number" id="t2">
+            </div>
+            <div class="input-group">
+                <label for="standard-g">Standard \( g \) (m/s²):</label>
+                <input type="number" id="standard-g" value="9.81">
+            </div>
+        </form>
+        <section id="results">
+            <h2>Results</h2>
+            <p><strong>Calculated \( g \):</strong> <span id="calculated-g">0</span> m/s²</p>
+            <p><strong>Percentage Error:</strong> <span id="percentage-error">0</span>%</p>
+        </section>
+    </main>
+    <footer>
+        <p><strong>Aadya Sri Jha</strong></p>
+        <p>B.Tech First Year | Mechanical and Automation Engineering</p>
+        <p>Indira Gandhi Delhi Technical University for Women</p>
+    </footer>
+    <script>
+        function calculate() {
+            const l1 = parseFloat(document.getElementById('l1').value) / 100;
+            const l2 = parseFloat(document.getElementById('l2').value) / 100;
+            const t1 = parseFloat(document.getElementById('t1').value);
+            const t2 = parseFloat(document.getElementById('t2').value);
+            const standardG = parseFloat(document.getElementById('standard-g').value);
+
+            if (isNaN(l1) || isNaN(l2) || isNaN(t1) || isNaN(t2) || isNaN(standardG)) return;
+
+            const distanceSum = l1 + l2;
+            const t1Squared = t1 ** 2;
+            const t2Squared = t2 ** 2;
+            const timeSum = t1Squared + t2Squared;
+            const firstTerm = timeSum / distanceSum;
+            const secondTerm = (t1Squared - t2Squared) / (l1 - l2);
+            const g = 78.9568352087 / (firstTerm + secondTerm);
+            const percentageError = ((Math.abs(g - standardG) / standardG) * 100).toFixed(2);
+
+            document.getElementById('calculated-g').innerText = g.toFixed(4);
+            document.getElementById('percentage-error').innerText = percentageError;
+        }
+
+        ['l1', 'l2', 't1', 't2', 'standard-g'].forEach(id =>
+            document.getElementById(id).addEventListener('input', calculate)
+        );
+    </script>
+</body>
+</html>
